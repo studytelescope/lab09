@@ -1,8 +1,10 @@
 ## Laboratory work V
 
-
+[![Build Status](https://travis-ci.org/thedraftaccount/lab05.svg?branch=master)](https://travis-ci.org/thedraftaccount/lab05)
 
 Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере **GTest**
+
+![alt text](https://github.com/thedraftaccount/lab05/tree/master/artifacts)
 
 ```ShellSession
 $ open https://github.com/google/googletest
