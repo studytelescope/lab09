@@ -4,7 +4,7 @@
 
 Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере **GTest**
 
-![alt_txt](https://github.com/thedraftaccount/lab05/tree/master/artifacts/screenshot.png)
+![alt_txt](https://raw.githubusercontent.com/thedraftaccount/lab05/master/artifacts/screenshot.png)
 
 ```ShellSession
 $ open https://github.com/google/googletest
