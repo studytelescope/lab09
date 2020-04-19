@@ -1,6 +1,6 @@
 ## Laboratory work IV
 
-[![Build Status](https://travis-ci.com/thedraftaccount/lab04.svg?branch=master)](https://travis-ci.com/thedraftaccount/lab04)
+[![Build Status](https://travis-ci.com/thedraftaccount/lab05.svg?branch=master)](https://travis-ci.com/thedraftaccount/lab05)
 
 Данная лабораторная работа посвещена изучению систем непрерывной интеграции на примере сервиса **Travis CI**
 
@@ -11,7 +11,7 @@ $ open https://travis-ci.org
 ## Tasks
 
 - [x] 1. Авторизоваться на сервисе **Travis CI** с использованием **GitHub** аккаунта
-- [x] 2. Создать публичный репозиторий с названием **lab04** на сервисе **GitHub**
+- [x] 2. Создать публичный репозиторий с названием **lab05** на сервисе **GitHub**
 - [x] 3. Ознакомиться со ссылками учебного материала
 - [x] 4. Включить интеграцию сервиса **Travis CI** с созданным репозиторием
 - [x] 5. Получить токен для **Travis CLI** с правами **repo** и **user**
@@ -133,17 +133,17 @@ Done installing documentation for multipart-post, faraday, faraday_middleware, h
 
 ```ShellSession
 # Linking with remote repo
-$ git clone https://github.com/${GITHUB_USERNAME}/lab03 projects/lab04
-Cloning into 'projects/lab04'...
+$ git clone https://github.com/${GITHUB_USERNAME}/lab03 projects/lab05
+Cloning into 'projects/lab05'...
 remote: Enumerating objects: 20, done.
 remote: Counting objects: 100% (20/20), done.
 remote: Compressing objects: 100% (14/14), done.
 remote: Total 20 (delta 2), reused 20 (delta 2), pack-reused 0
 Unpacking objects: 100% (20/20), done.
 
-$ cd projects/lab04
+$ cd projects/lab05
 $ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab04
+$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab05
 ```
 
 ```ShellSession
@@ -223,12 +223,12 @@ Description: ???
 thedraftaccount/lab03 (active: no, admin: yes, push: yes, pull: yes)
 Description: ???
 
-thedraftaccount/lab04 (active: no, admin: yes, push: yes, pull: yes)
+thedraftaccount/lab05 (active: no, admin: yes, push: yes, pull: yes)
 Description: ???
 
 $ travis enable
-Detected repository as thedraftaccount/lab04, is this correct? |yes| yes
-thedraftaccount/lab04: enabled :)
+Detected repository as thedraftaccount/lab05, is this correct? |yes| yes
+thedraftaccount/lab05: enabled :)
 
 $ travis whatsup
 nothing to show
@@ -236,6 +236,6 @@ nothing to show
 $ travis branches
 $ travis history
 $ travis show
-no build yet for thedraftaccount/lab04
+no build yet for thedraftaccount/lab05
 
 ```
