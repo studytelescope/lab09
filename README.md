@@ -1,212 +1,122 @@
-## Laboratory work VI
+## Laboratory work VII
 
-Данная лабораторная работа посвещена изучению средств пакетирования на примере **CPack**
 
-```ShellSession
-$ open https://cmake.org/Wiki/CMake:CPackPackageGenerators
+
+Данная лабораторная работа посвещена изучению систем управления пакетами на примере **Hunter**
+
+```sh
+$ open https://github.com/ruslo/hunter
 ```
 
 ## Tasks
 
-- [x] 1. Создать публичный репозиторий с названием **lab06** на сервисе **GitHub**
-- [x] 2. Выполнить инструкцию учебного материала
-- [x] 3. Ознакомиться со ссылками учебного материала
-- [x] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
+- [ ] 1. Создать публичный репозиторий с названием **lab07** на сервисе **GitHub**
+- [ ] 2. Выполнить инструкцию учебного материала
+- [ ] 3. Ознакомиться со ссылками учебного материала
+- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
 
 ## Tutorial
 
-```ShellSession
-# Setting environment variables and default text editors
+```sh
 $ export GITHUB_USERNAME=<имя_пользователя>
-$ export GITHUB_EMAIL=<адрес_почтового_ящика>
-$ alias edit=<nano|vi|vim|subl>
-$ alias gsed=sed # for *-nix system
+$ alias gsed=sed
 ```
 
-```ShellSession
-# Organize of a working directory
+```sh
 $ cd ${GITHUB_USERNAME}/workspace
 $ pushd .
 $ source scripts/activate
 ```
 
-```ShellSession
-# Get information from the remote server
-$ git clone https://github.com/${GITHUB_USERNAME}/lab05 projects/lab06
-Cloning into 'projects/lab06'...
-remote: Enumerating objects: 59, done.
-remote: Counting objects: 100% (59/59), done.
-remote: Compressing objects: 100% (35/35), done.
-remote: Total 59 (delta 18), reused 54 (delta 13), pack-reused 0
-Unpacking objects: 100% (59/59), done.
+```sh
+$ git clone https://github.com/${GITHUB_USERNAME}/lab06 projects/lab07
+Cloning into 'projects/lab07'...
+remote: Enumerating objects: 70, done.
+remote: Counting objects: 100% (70/70), done.
+remote: Compressing objects: 100% (38/38), done.
+remote: Total 70 (delta 21), reused 70 (delta 21), pack-reused 0
+Unpacking objects: 100% (70/70), done.
 
-$ cd projects/lab06
-$ git remote remove origin #remove origin server
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab06 # Add origin server
+$ cd projects/lab07
+$ git remote remove origin
+$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab07
 ```
 
-```ShellSession
-# Set versions of the project
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION_STRING "v\${PRINT_VERSION}")
+```sh
+$ mkdir -p cmake
+$ wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
+--2020-04-21 20:27:06--  https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.192.133, 151.101.128.133, 151.101.64.133, ...
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.192.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 17070 (17K) [text/plain]
+Saving to: ‘cmake/HunterGate.cmake’
+
+cmake/HunterGate.cmake            100%[=============================================================>]  16,67K  --.-KB/s    in 0,04s   
+
+2020-04-21 20:27:06 (412 KB/s) - ‘cmake/HunterGate.cmake’ saved [17070/17070]
+
+$ gsed -i '/cmake_minimum_required(VERSION 3.4)/a\
+
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.251.tar.gz"
+    SHA1 "5659b15dc0884d4b03dbd95710e6a1fa0fc3258d"
+)
 ' CMakeLists.txt
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION\
-  \${PRINT_VERSION_MAJOR}.\${PRINT_VERSION_MINOR}.\${PRINT_VERSION_PATCH}.\${PRINT_VERSION_TWEAK})
+```
+
+```sh
+$ git rm -rf third-party/gtest
+$ gsed -i '/set(PRINT_VERSION_STRING "v\${PRINT_VERSION}")/a\
+
+hunter_add_package(GTest)
+find_package(GTest CONFIG REQUIRED)
 ' CMakeLists.txt
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION_TWEAK 0)
-' CMakeLists.txt
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION_PATCH 0)
-' CMakeLists.txt
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION_MINOR 1)
-' CMakeLists.txt
-$ gsed -i '/project(print)/a\
-set(PRINT_VERSION_MAJOR 0)
-' CMakeLists.txt
-
-$ git diff # Show changes
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aa7a323..71b64e3 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -7,6 +7,13 @@ option(BUILD_EXAMPLES "Build examples" OFF)
- option(BUILD_TESTS "Build tests" OFF)
- 
- project(print)
-+set(PRINT_VERSION_MAJOR 0)
-+set(PRINT_VERSION_MINOR 1)
-+set(PRINT_VERSION_PATCH 0)
-+set(PRINT_VERSION_TWEAK 0)
-+set(PRINT_VERSION
-+  ${PRINT_VERSION_MAJOR}.${PRINT_VERSION_MINOR}.${PRINT_VERSION_PATCH}.${PRINT_VERSION_TWEAK})
-+set(PRINT_VERSION_STRING "v${PRINT_VERSION}")
- 
- add_library(print STATIC ${CMAKE_CURRENT_SOURCE_DIR}/sources/print.cpp)
-
+$ gsed -i 's/add_subdirectory(third-party/gtest)//' CMakeLists.txt
+$ gsed -i 's/gtest_main/GTest::gtest_main/' CMakeLists.txt
 ```
 
-```ShellSession
-$ touch DESCRIPTION && edit DESCRIPTION # Packet description
-$ touch ChangeLog.md # Packet logs and changes of the last version
-$ export DATE="`LANG=en_US date +'%a %b %d %Y'`" # New environment variable
-# Making logs
-$ cat > ChangeLog.md <<EOF
-* ${DATE} ${GITHUB_USERNAME} <${GITHUB_EMAIL}> 0.1.0.0
-- Initial RPM release
-EOF
+```sh
+$ cmake -H. -B_builds -DBUILD_TESTS=ON
+-- [hunter] Calculating Toolchain-SHA1
+-- [hunter] Calculating Config-SHA1
+-- [hunter] HUNTER_ROOT: /home/johnsnow/.hunter
+-- [hunter] [ Hunter-ID: 5659b15 | Toolchain-ID: 9b2c9d4 | Config-ID: 8a1641b ]
+-- [hunter] GTEST_ROOT: /home/johnsnow/.hunter/_Base/5659b15/9b2c9d4/8a1641b/Install (ver.: 1.10.0)
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
+
+$ cmake --build _builds
+[ 50%] Built target print
+Scanning dependencies of target check
+[ 75%] Building CXX object CMakeFiles/check.dir/tests/test1.cpp.o
+[100%] Linking CXX executable check
+[100%] Built target check
+
+$ cmake --build _builds --target test
+Running tests...
+Test project /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
+    Start 1: check
+1/1 Test #1: check ............................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
+
+$ ls -la $HOME/.hunter
+total 12
+drwxr-xr-x  3 johnsnow johnsnow 4096 апр  4 09:58 .
+drwxr-xr-x 41 johnsnow johnsnow 4096 апр 21 15:23 ..
+drwxr-xr-x  6 johnsnow johnsnow 4096 апр  4 09:58 _Base
 ```
 
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat > CPackConfig.cmake <<EOF
-include(InstallRequiredSystemLibraries)
-EOF
-```
-
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat >> CPackConfig.cmake <<EOF
-set(CPACK_PACKAGE_CONTACT ${GITHUB_EMAIL})
-set(CPACK_PACKAGE_VERSION_MAJOR \${PRINT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR \${PRINT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH \${PRINT_VERSION_PATCH})
-set(CPACK_PACKAGE_VERSION_TWEAK \${PRINT_VERSION_TWEAK})
-set(CPACK_PACKAGE_VERSION \${PRINT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_FILE \${CMAKE_CURRENT_SOURCE_DIR}/DESCRIPTION)
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "static C++ library for printing")
-EOF
-```
-
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat >> CPackConfig.cmake <<EOF
-
-set(CPACK_RESOURCE_FILE_LICENSE \${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
-set(CPACK_RESOURCE_FILE_README \${CMAKE_CURRENT_SOURCE_DIR}/README.md)
-EOF
-```
-
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat >> CPackConfig.cmake <<EOF
-
-set(CPACK_RPM_PACKAGE_NAME "print-devel")
-set(CPACK_RPM_PACKAGE_LICENSE "MIT")
-set(CPACK_RPM_PACKAGE_GROUP "print")
-set(CPACK_RPM_CHANGELOG_FILE \${CMAKE_CURRENT_SOURCE_DIR}/ChangeLog.md)
-set(CPACK_RPM_PACKAGE_RELEASE 1)
-EOF
-```
-
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat >> CPackConfig.cmake <<EOF
-
-set(CPACK_DEBIAN_PACKAGE_NAME "libprint-dev")
-set(CPACK_DEBIAN_PACKAGE_PREDEPENDS "cmake >= 3.0")
-set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
-EOF
-```
-
-```ShellSession
-# Writing into CPackConfig.cmake
-$ cat >> CPackConfig.cmake <<EOF
-
-include(CPack)
-EOF
-```
-
-```ShellSession
-# Writing into CMakeKists.txt
-$ cat >> CMakeLists.txt <<EOF
-
-include(CPackConfig.cmake)
-EOF
-```
-
-```ShellSession
-# Editing of README
-$ gsed -i 's/lab05/lab06/g' README.md
-```
-
-```ShellSession
-# Commiting and pushing changes
-$ git add .
-$ git commit -m"added cpack config"
-[master 47ab2c2] added cpack config
- 4 files changed, 38 insertions(+)
- create mode 100644 CPackConfig.cmake
- create mode 100644 ChangeLog.md
- create mode 100644 DESCRIPTION
-
-$ git tag v0.1.0.0
-$ git push origin master --tags
-Username for 'https://github.com': thedraftaccount
-Password for 'https://thedraftaccount@github.com': 
-Counting objects: 65, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (54/54), done.
-Writing objects: 100% (65/65), 304.91 KiB | 12.70 MiB/s, done.
-Total 65 (delta 20), reused 0 (delta 0)
-remote: Resolving deltas: 100% (20/20), done.
-To https://github.com/thedraftaccount/lab06
- * [new branch]      master -> master
- * [new tag]         v0.1.0.0 -> v0.1.0.0
-```
-
-```ShellSession
-# Activation of a project in Travis
-$ travis login --auto
-$ travis enable
-thedraftaccount/lab06: enabled :)
-```
-
-```ShellSession
-# Working with data via Cmake
-$ cmake -H. -B_build
+```sh
+$ git clone https://github.com/cpp-pm/hunter $HOME/projects/hunter
+$ export HUNTER_ROOT=$HOME/projects/hunter
+$ rm -rf _builds
+$ cmake -H. -B_builds -DBUILD_TESTS=ON
 -- The C compiler identification is GNU 7.5.0
 -- The CXX compiler identification is GNU 7.5.0
 -- Check for working C compiler: /usr/bin/cc
@@ -221,63 +131,122 @@ $ cmake -H. -B_build
 -- Detecting CXX compiler ABI info - done
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
+-- [hunter] Calculating Toolchain-SHA1
+-- [hunter] Calculating Config-SHA1
+-- [hunter] HUNTER_ROOT: /home/johnsnow/projects/hunter
+-- [hunter] [ Hunter-ID: xxxxxxx | Toolchain-ID: 9b2c9d4 | Config-ID: 2f6b703 ]
+-- [hunter] GTEST_ROOT: /home/johnsnow/projects/hunter/_Base/xxxxxxx/9b2c9d4/2f6b703/Install (ver.: 1.10.0)
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab06/_build
+-- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
 
-$ cmake --build _build
+$ cmake --build _builds
 Scanning dependencies of target print
-[ 50%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
-[100%] Linking CXX static library libprint.a
-[100%] Built target print
+[ 25%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
+[ 50%] Linking CXX static library libprint.a
+[ 50%] Built target print
+Scanning dependencies of target check
+[ 75%] Building CXX object CMakeFiles/check.dir/tests/test1.cpp.o
+[100%] Linking CXX executable check
+[100%] Built target check
 
-$ cd _build
-$ cpack -G "TGZ"
-CPack: Create package using TGZ
-CPack: Install projects
-CPack: - Run preinstall target for: print
-CPack: - Install project: print
-CPack: Create package
-CPack: - package: /home/johnsnow/thedraftaccount/workspace/projects/lab06/_build/print-0.1.0.0-Linux.tar.gz generated.
+$ cmake --build _builds --target test
+Running tests...
+Test project /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
+    Start 1: check
+1/1 Test #1: check ............................   Passed    0.00 sec
 
-$ cd ..
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
 ```
 
-```ShellSession
-$ cmake -H. -B_build -DCPACK_GENERATOR="TGZ" # Build the project
--- Configuring done
--- Generating done
--- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab06/_build
+```sh
+$ cat $HUNTER_ROOT/cmake/configs/default.cmake | grep GTest
+ grep GTest
+  hunter_default_version(GTest VERSION 1.7.0-hunter-6)
+  hunter_default_version(GTest VERSION 1.10.0)
 
-$ cmake --build _build --target package # Build the project
-[100%] Built target print
-Run CPack packaging tool...
-CPack: Create package using TGZ
-CPack: Install projects
-CPack: - Run preinstall target for: print
-CPack: - Install project: print
-CPack: Create package
-CPack: - package: /home/johnsnow/thedraftaccount/workspace/projects/lab06/_build/print-0.1.0.0-Linux.tar.gz generated.
+$ cat $HUNTER_ROOT/cmake/projects/GTest/hunter.cmake
+# Copyright (c) 2013, Ruslan Baratov
+# All rights reserved.
+
+# !!! DO NOT PLACE HEADER GUARDS HERE !!!
+
+include(hunter_add_version)
+include(hunter_cacheable)
+include(hunter_download)
+include(hunter_pick_scheme)
+include(hunter_cmake_args)
+
+...
+
+hunter_pick_scheme(DEFAULT url_sha1_cmake)
+hunter_cacheable(GTest)
+hunter_download(PACKAGE_NAME GTest PACKAGE_INTERNAL_DEPS_ID 1)
+
+$ mkdir cmake/Hunter
+$ cat > cmake/Hunter/config.cmake <<EOF
+hunter_config(GTest VERSION 1.7.0-hunter-9)
+EOF
+# add LOCAL in HunterGate function
 ```
 
-```ShellSession
-# Repo with archive file
-$ mkdir artifacts
-$ mv _build/*.tar.gz artifacts # Rename it
-$ tree artifacts
-artifacts
-├── print-0.1.0.0-Linux.tar.gz
-└── test_screenshot.png
+```sh
+$ mkdir demo
+$ cat > demo/main.cpp <<EOF
+#include <print.hpp>
 
-0 directories, 2 files
+#include <cstdlib>
 
+int main(int argc, char* argv[])
+{
+  const char* log_path = std::getenv("LOG_PATH");
+  if (log_path == nullptr)
+  {
+    std::cerr << "undefined environment variable: LOG_PATH" << std::endl;
+    return 1;
+  }
+  std::string text;
+  while (std::cin >> text)
+  {
+    std::ofstream out{log_path, std::ios_base::app};
+    print(text, out);
+    out << std::endl;
+  }
+}
+EOF
+
+$ gsed -i '/endif()/a\
+
+add_executable(demo ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp)
+target_link_libraries(demo print)
+install(TARGETS demo RUNTIME DESTINATION bin)
+' CMakeLists.txt
+```
+
+```sh
+$ mkdir tools
+$ git submodule add https://github.com/ruslo/polly tools/polly
+$ tools/polly/bin/polly.py --test
+$ tools/polly/bin/polly.py --install
+$ tools/polly/bin/polly.py --toolchain clang-cxx14
 ```
 
 ## Report
 
 ```sh
 $ popd
-$ export LAB_NUMBER=06
+$ export LAB_NUMBER=07
 $ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
 $ mkdir reports/lab${LAB_NUMBER}
 $ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
@@ -288,57 +257,14 @@ $ gist REPORT.md
 
 ## Homework
 
-После того, как вы настроили взаимодействие с системой непрерывной интеграции,</br>
-обеспечив автоматическую сборку и тестирование ваших изменений, стоит задуматься</br>
-о создание пакетов для измениний, которые помечаются тэгами (см. вкладку [releases](https://github.com/tp-labs/lab06/releases)).</br>
-Пакет должен содержать приложение _solver_ из [предыдущего задания](https://github.com/tp-labs/lab03#задание-1)
-Таким образом, каждый новый релиз будет состоять из следующих компонентов:
-- архивы с файлами исходного кода (`.tar.gz`, `.zip`)
-- пакеты с бинарным файлом _solver_ (`.deb`, `.rpm`, `.msi`, `.dmg`)
-
-В качестве подсказки:
-```sh
-$ cat .travis.yml
-os: osx
-script:
-...
-- cpack -G DragNDrop # dmg
-
-$ cat .travis.yml
-os: linux
-script:
-...
-- cpack -G DEB # deb
-
-$ cat .travis.yml
-os: linux
-addons:
-  apt:
-    packages:
-    - rpm
-script:
-...
-- cpack -G RPM # rpm
-
-$ cat appveyor.yml
-platform:
-- x86
-- x64
-build_script:
-...
-- cpack -G WIX # msi
-```
-
-Для этого нужно добавить ветвление в конфигурационные файлы для **CI** со следующей логикой:</br>
-если **commit** помечен тэгом, то необходимо собрать пакеты (`DEB, RPM, WIX, DragNDrop, ...`) </br>
-и разместить их на сервисе **GitHub**. (см. пример для [Travi CI](https://docs.travis-ci.com/user/deployment/releases))</br>
+### Задание
+1. Создайте cвой hunter-пакет.
 
 ## Links
 
-- [DMG](https://cmake.org/cmake/help/latest/module/CPackDMG.html)
-- [DEB](https://cmake.org/cmake/help/latest/module/CPackDeb.html)
-- [RPM](https://cmake.org/cmake/help/latest/module/CPackRPM.html)
-- [NSIS](https://cmake.org/cmake/help/latest/module/CPackNSIS.html)
+- [Create Hunter package](https://docs.hunter.sh/en/latest/creating-new/create.html)
+- [Custom Hunter config](https://github.com/ruslo/hunter/wiki/example.custom.config.id)
+- [Polly](https://github.com/ruslo/polly)
 
 ```
 Copyright (c) 2015-2020 The ISC Authors
