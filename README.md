@@ -1,6 +1,6 @@
 ## Laboratory work VII
 
-
+[![Build Status](https://travis-ci.org/thedraftaccount/lab07.svg?branch=master)](https://travis-ci.org/thedraftaccount/lab07)
 
 Данная лабораторная работа посвещена изучению систем управления пакетами на примере **Hunter**
 
@@ -237,9 +237,174 @@ install(TARGETS demo RUNTIME DESTINATION bin)
 ```sh
 $ mkdir tools
 $ git submodule add https://github.com/ruslo/polly tools/polly
+Cloning into '/home/johnsnow/thedraftaccount/workspace/projects/lab07/tools/polly'...
+remote: Enumerating objects: 29, done.
+remote: Counting objects: 100% (29/29), done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 6423 (delta 10), reused 24 (delta 10), pack-reused 6394
+Receiving objects: 100% (6423/6423), 1.64 MiB | 60.00 KiB/s, done.
+Resolving deltas: 100% (4418/4418), done.
+
 $ tools/polly/bin/polly.py --test
+Python version: 3.7
+Build dir: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default
+Execute command: [
+  `which`
+  `cmake`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "which" "cmake"
+
+/usr/bin/cmake
+Execute command: [
+  `cmake`
+  `--version`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "cmake" "--version"
+
+cmake version 3.10.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+Execute command: [
+  `cmake`
+  `-H.`
+  `-B/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default`
+  `-DCMAKE_TOOLCHAIN_FILE=/home/johnsnow/thedraftaccount/workspace/projects/lab07/tools/polly/default.cmake`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "cmake" "-H." "-B/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default" "-DCMAKE_TOOLCHAIN_FILE=/home/johnsnow/thedraftaccount/workspace/projects/lab07/tools/polly/default.cmake"
+
+-- [polly] Used toolchain: Default
+-- The C compiler identification is GNU 7.5.0
+-- The CXX compiler identification is GNU 7.5.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- [hunter] Calculating Toolchain-SHA1
+-- [hunter] Calculating Config-SHA1
+-- [hunter] HUNTER_ROOT: /home/johnsnow/projects/hunter
+-- [hunter] [ Hunter-ID: xxxxxxx | Toolchain-ID: 9b2c9d4 | Config-ID: 2f6b703 ]
+-- [hunter] GTEST_ROOT: /home/johnsnow/projects/hunter/_Base/xxxxxxx/9b2c9d4/2f6b703/Install (ver.: 1.10.0)
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default
+Execute command: [
+  `cmake`
+  `--build`
+  `/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default`
+  `--`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "cmake" "--build" "/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default" "--"
+
+Scanning dependencies of target print
+[ 25%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
+[ 50%] Linking CXX static library libprint.a
+[ 50%] Built target print
+Scanning dependencies of target demo
+[ 75%] Building CXX object CMakeFiles/demo.dir/demo/main.cpp.o
+[100%] Linking CXX executable demo
+[100%] Built target demo
+Run tests
+Execute command: [
+  `ctest`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default]> "ctest"
+
+*********************************
+No test configuration file found!
+*********************************
+Usage
+
+  ctest [options]
+
+-
+Log saved: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_logs/polly/default/log.txt
+-
+Generate: 0:00:05.158626s
+Build: 0:00:01.856485s
+Test: 0:00:00.043737s
+-
+Total: 0:00:07.059205s
+-
+SUCCESS
+
 $ tools/polly/bin/polly.py --install
-$ tools/polly/bin/polly.py --toolchain clang-cxx14
+Python version: 3.7
+Build dir: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default
+Execute command: [
+  `which`
+  `cmake`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "which" "cmake"
+
+/usr/bin/cmake
+Execute command: [
+  `cmake`
+  `--version`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "cmake" "--version"
+
+cmake version 3.10.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+Execute command: [
+  `cmake`
+  `--build`
+  `/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default`
+  `--`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07]> "cmake" "--build" "/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default" "--"
+
+[ 50%] Built target print
+[100%] Built target demo
+Run tests
+Execute command: [
+  `ctest`
+]
+
+[/home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds/default]> "ctest"
+
+*********************************
+No test configuration file found!
+*********************************
+Usage
+
+  ctest [options]
+
+-
+Log saved: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_logs/polly/default/log.txt
+-
+Generate: 0:00:00.000307s
+Build: 0:00:01.114617s
+Test: 0:00:00.024501s
+-
+Total: 0:00:01.139709s
+-
+SUCCESS
 ```
 
 ## Report
