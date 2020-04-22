@@ -10,26 +10,28 @@ $ open https://github.com/ruslo/hunter
 
 ## Tasks
 
-- [ ] 1. Создать публичный репозиторий с названием **lab07** на сервисе **GitHub**
-- [ ] 2. Выполнить инструкцию учебного материала
-- [ ] 3. Ознакомиться со ссылками учебного материала
-- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
+- [x] 1. Создать публичный репозиторий с названием **lab07** на сервисе **GitHub**
+- [x] 2. Выполнить инструкцию учебного материала
+- [x] 3. Ознакомиться со ссылками учебного материала
+- [x] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
 
 ## Tutorial
 
 ```sh
+# Set default username and editor
 $ export GITHUB_USERNAME=<имя_пользователя>
 $ alias gsed=sed
 ```
 
 ```sh
+# Get into the workspace and so on
 $ cd ${GITHUB_USERNAME}/workspace
 $ pushd .
 $ source scripts/activate
 ```
 
 ```sh
-$ git clone https://github.com/${GITHUB_USERNAME}/lab06 projects/lab07
+$ git clone https://github.com/${GITHUB_USERNAME}/lab06 projects/lab07 # Copy the previous lab
 Cloning into 'projects/lab07'...
 remote: Enumerating objects: 70, done.
 remote: Counting objects: 100% (70/70), done.
@@ -38,13 +40,13 @@ remote: Total 70 (delta 21), reused 70 (delta 21), pack-reused 0
 Unpacking objects: 100% (70/70), done.
 
 $ cd projects/lab07
-$ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab07
+$ git remote remove origin # Remove default server
+$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab07 # Add new remote server
 ```
 
 ```sh
-$ mkdir -p cmake
-$ wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake
+$ mkdir -p cmake #Make new folder
+$ wget https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake -O cmake/HunterGate.cmake #Get a hunter package gate file
 --2020-04-21 20:27:06--  https://raw.githubusercontent.com/cpp-pm/gate/master/cmake/HunterGate.cmake
 Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.192.133, 151.101.128.133, 151.101.64.133, ...
 Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.192.133|:443... connected.
@@ -56,7 +58,8 @@ cmake/HunterGate.cmake            100%[=========================================
 
 2020-04-21 20:27:06 (412 KB/s) - ‘cmake/HunterGate.cmake’ saved [17070/17070]
 
-$ gsed -i '/cmake_minimum_required(VERSION 3.4)/a\
+#Add the strings required by hunter
+$ gsed -i '/cmake_minimum_required(VERSION 3.4)/a\ 
 
 include("cmake/HunterGate.cmake")
 HunterGate(
@@ -67,18 +70,18 @@ HunterGate(
 ```
 
 ```sh
-$ git rm -rf third-party/gtest
+$ git rm -rf third-party/gtest # rm subdir
 $ gsed -i '/set(PRINT_VERSION_STRING "v\${PRINT_VERSION}")/a\
 
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
-' CMakeLists.txt
-$ gsed -i 's/add_subdirectory(third-party/gtest)//' CMakeLists.txt
-$ gsed -i 's/gtest_main/GTest::gtest_main/' CMakeLists.txt
+' CMakeLists.txt 
+$ gsed -i 's/add_subdirectory(third-party/gtest)//' CMakeLists.txt # rm subdir
+$ gsed -i 's/gtest_main/GTest::gtest_main/' CMakeLists.txt # add namespace
 ```
 
 ```sh
-$ cmake -H. -B_builds -DBUILD_TESTS=ON
+$ cmake -H. -B_builds -DBUILD_TESTS=ON # init hunter workspace
 -- [hunter] Calculating Toolchain-SHA1
 -- [hunter] Calculating Config-SHA1
 -- [hunter] HUNTER_ROOT: /home/johnsnow/.hunter
@@ -88,14 +91,14 @@ $ cmake -H. -B_builds -DBUILD_TESTS=ON
 -- Generating done
 -- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
 
-$ cmake --build _builds
+$ cmake --build _builds # build the project
 [ 50%] Built target print
 Scanning dependencies of target check
 [ 75%] Building CXX object CMakeFiles/check.dir/tests/test1.cpp.o
 [100%] Linking CXX executable check
 [100%] Built target check
 
-$ cmake --build _builds --target test
+$ cmake --build _builds --target test # run tests
 Running tests...
 Test project /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
     Start 1: check
@@ -105,7 +108,7 @@ Test project /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
 
 Total Test time (real) =   0.00 sec
 
-$ ls -la $HOME/.hunter
+$ ls -la $HOME/.hunter # show hunter dir
 total 12
 drwxr-xr-x  3 johnsnow johnsnow 4096 апр  4 09:58 .
 drwxr-xr-x 41 johnsnow johnsnow 4096 апр 21 15:23 ..
@@ -113,10 +116,10 @@ drwxr-xr-x  6 johnsnow johnsnow 4096 апр  4 09:58 _Base
 ```
 
 ```sh
-$ git clone https://github.com/cpp-pm/hunter $HOME/projects/hunter
-$ export HUNTER_ROOT=$HOME/projects/hunter
-$ rm -rf _builds
-$ cmake -H. -B_builds -DBUILD_TESTS=ON
+$ git clone https://github.com/cpp-pm/hunter $HOME/projects/hunter # Get hunter for tests
+$ export HUNTER_ROOT=$HOME/projects/hunter # path to the hunter
+$ rm -rf _builds # blabla
+$ cmake -H. -B_builds -DBUILD_TESTS=ON # build and run for tests
 -- The C compiler identification is GNU 7.5.0
 -- The CXX compiler identification is GNU 7.5.0
 -- Check for working C compiler: /usr/bin/cc
@@ -149,7 +152,7 @@ $ cmake -H. -B_builds -DBUILD_TESTS=ON
 -- Generating done
 -- Build files have been written to: /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
 
-$ cmake --build _builds
+$ cmake --build _builds #build
 Scanning dependencies of target print
 [ 25%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
 [ 50%] Linking CXX static library libprint.a
@@ -159,7 +162,7 @@ Scanning dependencies of target check
 [100%] Linking CXX executable check
 [100%] Built target check
 
-$ cmake --build _builds --target test
+$ cmake --build _builds --target test # run tests
 Running tests...
 Test project /home/johnsnow/thedraftaccount/workspace/projects/lab07/_builds
     Start 1: check
@@ -171,12 +174,12 @@ Total Test time (real) =   0.00 sec
 ```
 
 ```sh
-$ cat $HUNTER_ROOT/cmake/configs/default.cmake | grep GTest
+$ cat $HUNTER_ROOT/cmake/configs/default.cmake | grep GTest # show hunter version
  grep GTest
   hunter_default_version(GTest VERSION 1.7.0-hunter-6)
   hunter_default_version(GTest VERSION 1.10.0)
 
-$ cat $HUNTER_ROOT/cmake/projects/GTest/hunter.cmake
+$ cat $HUNTER_ROOT/cmake/projects/GTest/hunter.cmake # hunter.cmake file
 # Copyright (c) 2013, Ruslan Baratov
 # All rights reserved.
 
@@ -202,7 +205,7 @@ EOF
 ```
 
 ```sh
-$ mkdir demo
+$ mkdir demo # create test
 $ cat > demo/main.cpp <<EOF
 #include <print.hpp>
 
@@ -226,7 +229,7 @@ int main(int argc, char* argv[])
 }
 EOF
 
-$ gsed -i '/endif()/a\
+$ gsed -i '/endif()/a\ # add target demo
 
 add_executable(demo ${CMAKE_CURRENT_SOURCE_DIR}/demo/main.cpp)
 target_link_libraries(demo print)
@@ -236,7 +239,7 @@ install(TARGETS demo RUNTIME DESTINATION bin)
 
 ```sh
 $ mkdir tools
-$ git submodule add https://github.com/ruslo/polly tools/polly
+$ git submodule add https://github.com/ruslo/polly tools/polly #Add submodule
 Cloning into '/home/johnsnow/thedraftaccount/workspace/projects/lab07/tools/polly'...
 remote: Enumerating objects: 29, done.
 remote: Counting objects: 100% (29/29), done.
