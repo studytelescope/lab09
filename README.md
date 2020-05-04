@@ -18,12 +18,16 @@ $ open https://help.github.com/articles/creating-releases/
 
 ## Tutorial
 
+Set up global variables
+
 ```sh
 $ export GITHUB_TOKEN=<полученный_токен>
 $ export GITHUB_USERNAME=<имя_пользователя>
 $ export PACKAGE_MANAGER=<пакетный менеджер>
 $ export GPG_PACKAGE_NAME=<gpg2|gpg>
 ```
+
+install xclip
 
 ```sh
 # for *-nix system
@@ -38,6 +42,8 @@ $ alias pbcopy='xclip -selection clipboard'
 $ alias pbpaste='xclip -selection clipboard -o'
 ```
 
+Configure surrounding
+
 ```sh
 $ cd ${GITHUB_USERNAME}/workspace
 $ pushd .
@@ -45,6 +51,8 @@ $ pushd .
 $ source scripts/activate
 $ go get github.com/aktau/github-release
 ```
+
+Get new repo on the basis of the previous one
 
 ```sh
 $ git clone https://github.com/${GITHUB_USERNAME}/lab08 projects/lab09
@@ -61,9 +69,8 @@ $ git remote remove origin
 $ git remote add origin https://github.com/${GITHUB_USERNAME}/lab09
 ```
 
-```sh
-$ gsed -i 's/lab08/lab09/g' README.md
-```
+Install and config gpg
+Then create key and update the list of keys
 
 ```sh
 $ $PACKAGE_MANAGER install ${GPG_PACKAGE_NAME}
@@ -71,7 +78,7 @@ Reading package lists... Done
 Building dependency tree       
 Reading state information... Done
 
-$ gpg --list-secret-keys --keyid-format LONG
+$ gpg --list-secret-keys --keyid-format LONG #check existing secret keys
 sec   rsa4096/99082BAC09789222 2020-04-16 [SC]
       28A99B939E02770C9621AD3899082BAC09789222
 uid                 [ultimate] eugeny uzyanov (github release) <jonnyuz@gmail.com>
@@ -82,7 +89,7 @@ sec   rsa4096/BA3D4820DE67EA33 2020-04-16 [SC]
 uid                 [ultimate] Eugene Uzyanov (help me) <jonnyuz99@gmail.com>
 ssb   rsa4096/8E37CC76AB3F67F2 2020-04-16 [E]
 
-$ gpg --full-generate-key
+$ gpg --full-generate-key #generate ordinary key (because the secret one failed while creating)
 We need to generate a lot of random bytes. It is a good idea to perform
 some other action (type on the keyboard, move the mouse, utilize the
 disks) during the prime generation; this gives the random number
@@ -94,15 +101,19 @@ generator a better chance to gain enough entropy.
 gpg: no writable public keyring found: Not found
 Key generation failed: Not found
 
-$ gpg --list-secret-keys --keyid-format LONG
+$ gpg --list-secret-keys --keyid-format LONG #check existing secret keys
 $ gpg -K ${GITHUB_USERNAME}
+
+#Highlight public part
 $ GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep ssb | tail -1 | awk '{print $2}' | awk -F'/' '{print $2}')
+
+#Highlight secret part
 $ GPG_SEC_KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | tail -1 | awk '{print $2}' | awk -F'/' '{print $2}')
 
-$echo ${GPG_KEY_ID}
+$echo ${GPG_KEY_ID} #yay public part!
 8E37CC76AB3F67F2
 
-$ gpg --armor --export ${GPG_KEY_ID}
+$ gpg --armor --export ${GPG_KEY_ID} #copy info to the system buffer
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBF6YgLgBEADP3A+y41c4Txe1UrXs4xwr98sRx09iw0WmiaK4cOT6fn1FqwP+
@@ -161,10 +172,7 @@ $ git config user.signingkey ${GPG_SEC_KEY_ID}
 $ git config gpg.program gpg
 ```
 
-```sh
-$ test -r ~/.bash_profile && echo 'export GPG_TTY=$(tty)' >> ~/.bash_profile
-$ echo 'export GPG_TTY=$(tty)' >> ~/.profile
-```
+Build and check
 
 ```sh
 $ cmake -H. -B_build -DCPACK_GENERATOR="TGZ"
@@ -218,6 +226,8 @@ CPack: Create package
 CPack: - package: /home/johnsnow/thedraftaccount/workspace/projects/lab09/_build/print-0.1.0.0-Linux.tar.gz generated.
 ```
 
+Login and configure Travis
+
 ```sh
 $ travis login --auto
 Successfully logged in as thedraftaccount!
@@ -225,6 +235,7 @@ Successfully logged in as thedraftaccount!
 $ travis enable
 thedraftaccount/lab09: enabled :)
 ```
+Enter with a digital signature
 
 ```sh
 $ git tag -s v0.1.0.0
@@ -267,6 +278,8 @@ commit cd02c18206c9a7d8053eba1c250c6a2678af7c9c (HEAD -> master, tag: v0.1.0.0)
 $ git push origin master --tags
 ```
 
+Make release
+
 ```sh
 $ github-release --version
 github-release v0.7.2
@@ -278,6 +291,8 @@ releases:
 
 $  
 ```
+
+move tar.gz as an arthefact to release and set OS version
 
 ```sh
 $ export PACKAGE_OS=`uname -s` PACKAGE_ARCH=`uname -m` 
